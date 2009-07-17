@@ -25,9 +25,8 @@ module Graticule
       def parse_response(xml) # :nodoc:
         result = xml.elements['/Locations/Location[1]']
         coords = result.elements['Centroid/gml:Point/gml:coordinates'].text.split ','
-        Location.new :latitude => coords.first.to_f, :longitude => coords.last.to_f
+        [Location.new(:latitude => coords.first.to_f, :longitude => coords.last.to_f)]
       end
-      
     end
   end
 end

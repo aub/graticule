@@ -16,13 +16,13 @@ module Graticule #:nodoc:
     private
       
       def parse_response(xml) #:nodoc:
-        returning Location.new do |location|
-          location.latitude = xml.elements['geodata/latt'].text.to_f
-          location.longitude = xml.elements['geodata/longt'].text.to_f
-          location.street = xml.elements['geodata/standard/staddress'].text
-          location.locality = xml.elements['geodata/standard/city'].text
-          location.region = xml.elements['geodata/standard/prov'].text
-        end
+        location = Location.new
+        location.latitude = xml.elements['geodata/latt'].text.to_f
+        location.longitude = xml.elements['geodata/longt'].text.to_f
+        location.street = xml.elements['geodata/standard/staddress'].text
+        location.locality = xml.elements['geodata/standard/city'].text
+        location.region = xml.elements['geodata/standard/prov'].text
+        [location]
       end
 
       def check_error(xml) #:nodoc:

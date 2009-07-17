@@ -45,22 +45,22 @@ module Graticule #:nodoc:
 
       def parse_response(xml) # :nodoc:
         r = xml.elements['ResultSet/Result[1]']
-        returning Location.new do |location|
-          location.precision = PRECISION[r.attributes['precision']] || :unknown
+        location = Location.new
+        location.precision = PRECISION[r.attributes['precision']] || :unknown
 
-          if r.attributes.include? 'warning' then
-            location.warning = r.attributes['warning']
-          end
-
-          location.latitude = r.elements['Latitude'].text.to_f
-          location.longitude = r.elements['Longitude'].text.to_f
-
-          location.street = r.elements['Address'].text.titleize unless r.elements['Address'].text.blank?
-          location.locality = r.elements['City'].text.titleize unless r.elements['City'].text.blank?
-          location.region = r.elements['State'].text
-          location.postal_code = r.elements['Zip'].text
-          location.country = r.elements['Country'].text
+        if r.attributes.include? 'warning' then
+          location.warning = r.attributes['warning']
         end
+
+        location.latitude = r.elements['Latitude'].text.to_f
+        location.longitude = r.elements['Longitude'].text.to_f
+
+        location.street = r.elements['Address'].text.titleize unless r.elements['Address'].text.blank?
+        location.locality = r.elements['City'].text.titleize unless r.elements['City'].text.blank?
+        location.region = r.elements['State'].text
+        location.postal_code = r.elements['Zip'].text
+        location.country = r.elements['Country'].text
+        [location] 
       end
 
       # Extracts and raises an error from +xml+, if any.

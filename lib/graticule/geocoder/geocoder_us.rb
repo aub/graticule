@@ -37,7 +37,7 @@ module Graticule #:nodoc:
         location.latitude = xml.elements['rdf:RDF/geo:Point/geo:lat'].text.to_f
         location.longitude = xml.elements['rdf:RDF/geo:Point/geo:long'].text.to_f
 
-        return location
+        [location]
       end
 
       def check_error(xml) #:nodoc:

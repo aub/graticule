@@ -48,19 +48,19 @@ module Graticule #:nodoc:
       
       def parse_response(xml)
         r = xml.elements['Results/Location[1]']
-        returning Location.new do |location|
           
-          location.precision = PRECISION[r.attributes['geocodeQuality']] || :unknown
-          
-          location.street = r.elements['Address/Street'].text.titleize unless r.elements['Address/Street'].nil?
-          location.locality = r.elements['Address/Areas/Area'].text.titleize unless r.elements['Address/Areas/Area'].nil?
-          location.region = r.elements['Address/State'].text.titleize unless r.elements['Address/State'].nil?
-          location.postal_code = r.elements['Address/PostalCode'].text unless r.elements['Address/PostalCode'].nil?
-          location.country = r.elements['Address/CountryCode'].text
-          
-          location.latitude = r.elements['Point/Lat'].text.to_f
-          location.longitude = r.elements['Point/Lon'].text.to_f
-        end
+        location = Location.new
+        location.precision = PRECISION[r.attributes['geocodeQuality']] || :unknown
+        
+        location.street = r.elements['Address/Street'].text.titleize unless r.elements['Address/Street'].nil?
+        location.locality = r.elements['Address/Areas/Area'].text.titleize unless r.elements['Address/Areas/Area'].nil?
+        location.region = r.elements['Address/State'].text.titleize unless r.elements['Address/State'].nil?
+        location.postal_code = r.elements['Address/PostalCode'].text unless r.elements['Address/PostalCode'].nil?
+        location.country = r.elements['Address/CountryCode'].text
+        
+        location.latitude = r.elements['Point/Lat'].text.to_f
+        location.longitude = r.elements['Point/Lon'].text.to_f
+        [location] 
       end
       
       def check_error(xml)

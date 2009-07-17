@@ -1,3 +1,5 @@
+require 'ruby-debug'
+
 module Graticule #:nodoc:
   module Geocoder #:nodoc:
 
@@ -36,10 +38,18 @@ module Graticule #:nodoc:
 
       # Locates +address+ returning a Location
       def locate(address)
-        get :q => address.is_a?(String) ? address : location_from_params(address).to_s
+        do_locate(address, false)
+      end
+
+      def locate_all(address)
+        do_locate(address, true)
       end
 
       protected
+
+      def do_locate(address, multi)
+        get(:q => address.is_a?(String) ? address : location_from_params(address).to_s, :multiple => multi)
+      end
 
       def make_url(params) #:nodoc
         query = "e=5&<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><Geocode Version=\"1\">#{address_string(params[:q])}#{authentication_string}</Geocode>"
@@ -50,20 +60,20 @@ module Graticule #:nodoc:
 
       # Extracts a location from +xml+.
       def parse_response(xml) #:nodoc:
-        longitude = xml.elements['/GeocodeResponse/LocationCollection/GeoAddress/LatLng/Lng'].text.to_f
-        latitude = xml.elements['/GeocodeResponse/LocationCollection/GeoAddress/LatLng/Lat'].text.to_f
-        returning Location.new(:latitude => latitude, :longitude => longitude) do |l|
-          address = REXML::XPath.first(xml, '/GeocodeResponse/LocationCollection/GeoAddress')
-
-          if address
-            l.street = value(address.elements['./Street/text()'])
-            l.locality = value(address.elements['./AdminArea5/text()'])
-            l.region = value(address.elements['./AdminArea3/text()'])
-            l.postal_code = value(address.elements['./PostalCode/text()'])
-            l.country = value(address.elements['./AdminArea1/text()'])
-            l.precision = PRECISION[value(address.elements['./ResultCode/text()'])[0,2]]
-          end
+        locations = []
+        REXML::XPath.each(xml, '/GeocodeResponse/LocationCollection/GeoAddress') do |elem|
+          longitude = elem.elements['LatLng/Lng'].text.to_f
+          latitude = elem.elements['LatLng/Lat'].text.to_f
+          location = Location.new(:latitude => latitude, :longitude => longitude)
+          location.street = value(elem.elements['Street'])
+          location.locality = value(elem.elements['AdminArea5'])
+          location.region = value(elem.elements['AdminArea3'])
+          location.postal_code = value(elem.elements['PostalCode'])
+          location.country = value(elem.elements['AdminArea1'])
+          location.precision = PRECISION[value(elem.elements['ResultCode'])[0,2]]
+          locations << location
         end
+        locations
       end
 
       # Extracts and raises any errors in +xml+
@@ -71,7 +81,7 @@ module Graticule #:nodoc:
       end
 
       def value(element)
-        element.value if element
+        element.text if element
       end
 
       def authentication_string

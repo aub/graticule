@@ -78,7 +78,11 @@ module Graticule #:nodoc:
       def get(params = {})
         response = prepare_response(make_url(params).open('User-Agent' => USER_AGENT).read)
         check_error(response)
-        return parse_response(response)
+        if params[:multiple]
+          parse_response(response)
+        else
+          parse_response(response)[0]
+        end
       rescue OpenURI::HTTPError => e
         check_error(prepare_response(e.io.read))
         raise

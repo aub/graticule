@@ -4,6 +4,8 @@ module Graticule
   module Geocoder
     class MapquestTest < Test::Unit::TestCase
       def setup
+        URI::HTTP.responses = []
+        URI::HTTP.uris = []
         @geocoder = Mapquest.new('client_id', 'password')
       end
 
@@ -24,17 +26,29 @@ module Graticule
 
       def test_multi_result
         prepare_response(:multi_result)
-        location = Location.new(
-          :country => "US",
-          :latitude => 40.925598,
-          :locality => "Stony Brook",
-          :longitude => -73.141403,
-          :postal_code => nil,
-          :precision => :city,
-          :region => "NY",
-          :street => nil
-        )
-        assert_equal(location, @geocoder.locate('217 Union St., NY'))
+        locations = [
+          Location.new(
+            :country => "US",
+            :latitude => 40.925598,
+            :locality => "Stony Brook",
+            :longitude => -73.141403,
+            :postal_code => nil,
+            :precision => :city,
+            :region => "NY",
+            :street => nil
+          ),
+          Location.new(
+            :country => "US",
+            :latitude => 41.229401,
+            :locality => "Stony Point",
+            :longitude => -73.987503,
+            :postal_code => nil,
+            :precision => :city,
+            :region => "NY",
+            :street => nil
+          )
+        ]
+        assert_equal(locations, @geocoder.locate_all('217 Union St., NY'))
       end
 
       protected

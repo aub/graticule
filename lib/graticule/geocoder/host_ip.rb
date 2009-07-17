@@ -22,13 +22,13 @@ module Graticule #:nodoc:
       end
       
       def parse_response(response) #:nodoc:
-        returning Location.new do |location|
-          location.latitude = response['Latitude']
-          location.longitude = response['Longitude']
-          location.locality, location.region = response['City'].split(', ')
-          country = response['Country'].match(/\((\w+)\)$/)
-          location.country = country[1] if country
-        end
+        location = Location.new
+        location.latitude = response['Latitude']
+        location.longitude = response['Longitude']
+        location.locality, location.region = response['City'].split(', ')
+        country = response['Country'].match(/\((\w+)\)$/)
+        location.country = country[1] if country
+        [location]
       end
 
       def check_error(response) #:nodoc:
