@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brandon Keepers"]
-  s.date = %q{2009-07-15}
+  s.date = %q{2009-07-20}
   s.default_executable = %q{geocode}
   s.description = %q{Graticule is a geocoding API that provides a common interface to all the popular services, including Google, Yahoo, Geocoder.us, and MetaCarta.}
   s.email = %q{brandon@opensoul.org}
@@ -110,8 +110,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.3}
   s.summary = %q{API for using all the popular geocoding services.}
   s.test_files = [
-    "test/config.yml",
-     "test/mocks/uri.rb",
+    "test/mocks/uri.rb",
      "test/test_helper.rb",
      "test/unit/graticule/distance_test.rb",
      "test/unit/graticule/geocoder/geocoder_us_test.rb",
