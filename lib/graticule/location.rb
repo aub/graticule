@@ -22,7 +22,7 @@ module Graticule
     end
     
     def blank?
-      attributes.except(:precision).empty?
+      (attributes.keys - [:precision]).empty?
     end
     
     # Returns an Array with latitude and longitude.
@@ -37,8 +37,8 @@ module Graticule
     # Calculate the distance to another location.  See the various Distance formulas
     # for more information
     def distance_to(destination, options = {})
-      options = {:formula => :haversine, :units => :miles}.merge(options)
-      "Graticule::Distance::#{options[:formula].to_s.titleize}".constantize.distance(self, destination, options[:units])
+      formula = (options[:formula] || :haversine).to_s.gsub(/^(.)/) { $1.upcase }.gsub(/_(.)/) { $1.upcase }
+      Distance.const_get(formula).distance(self, destination, options[:units] || :miles)
     end
     
     # Where would I be if I dug through the center of the earth?

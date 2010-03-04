@@ -55,8 +55,12 @@ module Graticule #:nodoc:
         location.latitude = r.elements['Latitude'].text.to_f
         location.longitude = r.elements['Longitude'].text.to_f
 
-        location.street = r.elements['Address'].text.titleize unless r.elements['Address'].text.blank?
-        location.locality = r.elements['City'].text.titleize unless r.elements['City'].text.blank?
+        location.street = r.elements['Address'].text
+        location.street.gsub!(/([A-Z])([A-Z]+)/) { "#{$1}#{$2.downcase}" } if location.street
+
+        location.locality = r.elements['City'].text
+        location.locality.gsub!(/([A-Z])([A-Z]+)/) { "#{$1}#{$2.downcase}" } if location.locality
+
         location.region = r.elements['State'].text
         location.postal_code = r.elements['Zip'].text
         location.country = r.elements['Country'].text
@@ -74,11 +78,8 @@ module Graticule #:nodoc:
       def make_url(params) #:nodoc:
         params[:appid] = @appid
         params[:output] = 'xml'
-
         super params
       end
-
     end
-    
   end
 end

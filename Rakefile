@@ -9,19 +9,18 @@ require 'rake/rdoctask'
 require 'rcov/rcovtask'
 
 Jeweler::Tasks.new do |s|
-  s.name = "graticule"
-  s.rubyforge_project = "graticule"
+  s.name = "aub-graticule"
   s.author = 'Brandon Keepers'
   s.email = 'brandon@opensoul.org'
   s.summary = "API for using all the popular geocoding services."
   s.description = 'Graticule is a geocoding API that provides a common interface to all the popular services, including Google, Yahoo, Geocoder.us, and MetaCarta.'
-  s.homepage = "http://github.com/collectiveidea/graticule"
-  s.add_dependency "activesupport"
+  s.homepage = "http://github.com/aub/graticule"
   s.has_rdoc = true
   s.extra_rdoc_files = ["README.txt"]
   s.rdoc_options = ["--main", "README.rdoc", "--inline-source", "--line-numbers"]
   s.test_files = Dir['test/**/*.{yml,rb}']
 end
+Jeweler::GemcutterTasks.new
 
 desc 'Default: run unit tests.'
 task :default => :test
@@ -33,7 +32,7 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = true
 end
 
-desc 'Generate documentatio'
+desc 'Generate documentation'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title    = 'Graticule'
@@ -50,28 +49,6 @@ namespace :test do
     t.output_dir = 'coverage'
     t.verbose = true
     t.rcov_opts = %w(--exclude test,/usr/lib/ruby,/Library/Ruby,$HOME/.gem --sort coverage)
-  end
-end
-
-require 'rake/contrib/sshpublisher'
-namespace :rubyforge do
-
-  desc "Release gem and RDoc documentation to RubyForge"
-  task :release => ["rubyforge:release:gem", "rubyforge:release:docs"]
-
-  namespace :release do
-    desc "Publish RDoc to RubyForge."
-    task :docs => [:rdoc] do
-      config = YAML.load(
-          File.read(File.expand_path('~/.rubyforge/user-config.yml'))
-      )
-
-      host = "#{config['username']}@rubyforge.org"
-      remote_dir = "/var/www/gforge-projects/the-perfect-gem/"
-      local_dir = 'rdoc'
-
-      Rake::SshDirPublisher.new(host, remote_dir, local_dir).upload
-    end
   end
 end
 

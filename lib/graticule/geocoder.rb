@@ -8,7 +8,8 @@ module Graticule
   # See the documentation for your specific geocoder for more information
   #
   def self.service(name)
-    Geocoder.const_get name.to_s.camelize
+    clazz_name = name.to_s.gsub(/_(.)/) { $1.upcase }.gsub(/^(.)/) { $1.upcase }
+    Geocoder.const_get clazz_name
   end
   
   # Base error class

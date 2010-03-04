@@ -1,26 +1,33 @@
 $:.unshift(File.dirname(__FILE__))
 
-require 'active_support'
-
-require 'graticule/version'
 require 'graticule/core_ext'
-require 'graticule/location'
 require 'graticule/geocoder'
-require 'graticule/geocoder/base'
-require 'graticule/geocoder/bogus'
-require 'graticule/geocoder/rest'
-require 'graticule/geocoder/google'
-require 'graticule/geocoder/host_ip'
-require 'graticule/geocoder/multi'
-require 'graticule/geocoder/yahoo'
-require 'graticule/geocoder/geocoder_ca'
-require 'graticule/geocoder/geocoder_us'
-require 'graticule/geocoder/local_search_maps'
-require 'graticule/geocoder/meta_carta'
-require 'graticule/geocoder/postcode_anywhere'
-require 'graticule/geocoder/multimap'
-require 'graticule/geocoder/mapquest'
-require 'graticule/distance'
-require 'graticule/distance/haversine'
-require 'graticule/distance/spherical'
-require 'graticule/distance/vincenty'
+
+module Graticule
+  autoload :Version,            'graticule/version'
+  autoload :Location,           'graticule/location'
+  autoload :Distance,           'graticule/distance'
+  
+  module Geocoder
+    autoload :Base,             'graticule/geocoder/base'
+    autoload :Bogus,            'graticule/geocoder/bogus'
+    autoload :GeocoderCa,       'graticule/geocoder/geocoder_ca'
+    autoload :GeocoderUs,       'graticule/geocoder/geocoder_us'
+    autoload :Google,           'graticule/geocoder/google'
+    autoload :HostIp,           'graticule/geocoder/host_ip'
+    autoload :LocalSearchMaps,  'graticule/geocoder/local_search_maps'
+    autoload :Mapquest,         'graticule/geocoder/mapquest'
+    autoload :MetaCarta,        'graticule/geocoder/meta_carta'
+    autoload :Multi,            'graticule/geocoder/multi'
+    autoload :Multimap,         'graticule/geocoder/multimap'
+    autoload :PostcodeAnywhere, 'graticule/geocoder/postcode_anywhere'
+    autoload :Rest,             'graticule/geocoder/rest'
+    autoload :Yahoo,            'graticule/geocoder/yahoo'
+  end
+
+  module Distance
+    autoload :Haversine,        'graticule/distance/haversine'
+    autoload :Spherical,        'graticule/distance/spherical'
+    autoload :Vincenty,         'graticule/distance/vincenty'
+  end
+end

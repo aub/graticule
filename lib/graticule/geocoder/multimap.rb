@@ -52,9 +52,15 @@ module Graticule #:nodoc:
         location = Location.new
         location.precision = PRECISION[r.attributes['geocodeQuality']] || :unknown
         
-        location.street = r.elements['Address/Street'].text.titleize unless r.elements['Address/Street'].nil?
-        location.locality = r.elements['Address/Areas/Area'].text.titleize unless r.elements['Address/Areas/Area'].nil?
-        location.region = r.elements['Address/State'].text.titleize unless r.elements['Address/State'].nil?
+        location.street = r.elements['Address/Street'].text unless r.elements['Address/Street'].nil?
+        location.street.gsub!(/([A-Z])([A-Z]+)/) { "#{$1}#{$2.downcase}" } if location.street
+
+        location.locality = r.elements['Address/Areas/Area'].text unless r.elements['Address/Areas/Area'].nil?
+        location.locality.gsub!(/([A-Z])([A-Z]+)/) { "#{$1}#{$2.downcase}" } if location.locality
+
+        location.region = r.elements['Address/State'].text unless r.elements['Address/State'].nil?
+        location.region.gsub!(/([A-Z])([A-Z]+)/) { "#{$1}#{$2.downcase}" } if location.region
+
         location.postal_code = r.elements['Address/PostalCode'].text unless r.elements['Address/PostalCode'].nil?
         location.country = r.elements['Address/CountryCode'].text
         
