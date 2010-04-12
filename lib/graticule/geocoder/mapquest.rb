@@ -1,5 +1,3 @@
-require 'ruby-debug'
-
 module Graticule #:nodoc:
   module Geocoder #:nodoc:
 
