@@ -31,7 +31,7 @@ module Graticule #:nodoc:
       def initialize(client_id, password)
         @password = password
         @client_id = client_id
-        @url = URI.parse('http://geocode.dev.mapquest.com/mq/mqserver.dll')
+        @url = URI.parse('http://geocode.access.mapquest.com/mq/mqserver.dll')
       end
 
       # Locates +address+ returning a Location
